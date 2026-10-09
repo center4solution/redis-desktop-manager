@@ -8,10 +8,53 @@ interface Props {
   onCancel: () => void
 }
 
-type Errors = Partial<Record<'host' | 'port' | 'db', string>>
+type Errors = Partial<Record<'host' | 'port' | 'db' | 'url', string>>
 
 // Strict whole-number parse: "6379abc" or "1e3" must not slip through Number().
 const parseWhole = (raw: string): number | null => (/^\d+$/.test(raw.trim()) ? Number(raw) : null)
+
+interface UrlParts {
+  host: string
+  port: string
+  username: string
+  password: string
+  db: string
+  tls: boolean
+}
+
+// redis://[user[:pass]@]host[:port][/db]  —  rediss:// enables TLS.
+const parseRedisUrl = (raw: string): UrlParts | string => {
+  const text = raw.trim()
+  if (!text) return 'URL is required'
+  let u: URL
+  try {
+    u = new URL(text)
+  } catch {
+    return 'Not a valid URL (e.g. redis://user:pass@host:6379/0)'
+  }
+  if (u.protocol !== 'redis:' && u.protocol !== 'rediss:') {
+    return 'URL must start with redis:// or rediss://'
+  }
+  const host = u.hostname.replace(/^\[(.*)\]$/, '$1')
+  if (!host) return 'URL is missing a host'
+  const dbPath = u.pathname.replace(/^\//, '')
+  const db = dbPath || u.searchParams.get('db') || '0'
+  if (parseWhole(db) === null) return 'DB index in URL must be a whole number'
+  return {
+    host,
+    port: u.port || '6379',
+    username: decodeURIComponent(u.username),
+    password: decodeURIComponent(u.password),
+    db,
+    tls: u.protocol === 'rediss:'
+  }
+}
+
+const buildRedisUrl = (p: Omit<UrlParts, 'password'>): string => {
+  const auth = p.username ? `${encodeURIComponent(p.username)}@` : ''
+  const host = p.host.includes(':') ? `[${p.host}]` : p.host
+  return `${p.tls ? 'rediss' : 'redis'}://${auth}${host}:${p.port}/${p.db}`
+}
 
 function ConnectionForm({ initial, onSubmit, onCancel }: Props): React.JSX.Element {
   const [name, setName] = useState(initial?.name ?? '')
@@ -25,6 +68,8 @@ function ConnectionForm({ initial, onSubmit, onCancel }: Props): React.JSX.Eleme
   const [db, setDb] = useState(String(initial?.db ?? 0))
   const [tls, setTls] = useState(initial?.tls ?? false)
   const [icon, setIcon] = useState<string | undefined>(initial?.icon)
+  const [mode, setMode] = useState<'details' | 'url'>('details')
+  const [url, setUrl] = useState('')
   const [errors, setErrors] = useState<Errors>({})
   const [test, setTest] = useState<{ state: 'idle' | 'running' | 'ok' | 'fail'; message?: string }>({
     state: 'idle'
@@ -67,7 +112,52 @@ function ConnectionForm({ initial, onSubmit, onCancel }: Props): React.JSX.Eleme
     reader.readAsDataURL(file)
   }
 
+  // Carry values across when switching modes so nothing typed is lost.
+  const switchMode = (next: 'details' | 'url'): void => {
+    if (next === mode) return
+    if (next === 'url') {
+      setUrl(buildRedisUrl({ host: host.trim(), port, username: username.trim(), db, tls }))
+    } else if (url.trim()) {
+      const parsed = parseRedisUrl(url)
+      if (typeof parsed !== 'string') applyUrlParts(parsed)
+    }
+    setErrors({})
+    touch(() => setMode(next))
+  }
+
+  const applyUrlParts = (p: UrlParts): void => {
+    setHost(p.host)
+    setPort(p.port)
+    setUsername(p.username)
+    if (p.password) setPassword(p.password)
+    setDb(p.db)
+    setTls(p.tls)
+  }
+
   const validate = (): { values: ProfileFormValues; errors: Errors } => {
+    if (mode === 'url') {
+      const parsed = parseRedisUrl(url)
+      if (typeof parsed === 'string') {
+        return { errors: { url: parsed }, values: {} as ProfileFormValues }
+      }
+      const portNum = parseWhole(parsed.port) ?? 6379
+      return {
+        errors: {},
+        values: {
+          name: name.trim() || `${parsed.host}:${portNum}`,
+          host: parsed.host,
+          port: portNum,
+          username: parsed.username || undefined,
+          // URL without a password keeps whatever password field / saved one says
+          password: parsed.password || password || undefined,
+          clearPassword: clearPassword || undefined,
+          db: parseWhole(parsed.db) ?? 0,
+          tls: parsed.tls,
+          icon
+        }
+      }
+    }
+
     const errs: Errors = {}
     const trimmedHost = host.trim()
     if (!trimmedHost) errs.host = 'Host is required'
@@ -184,6 +274,52 @@ function ConnectionForm({ initial, onSubmit, onCancel }: Props): React.JSX.Eleme
               />
             </div>
           </div>
+          <div className="mode-toggle" role="group" aria-label="Connect using">
+            <span>Connect using</span>
+            <button
+              type="button"
+              className={mode === 'details' ? 'btn btn-sm btn-primary' : 'btn btn-sm'}
+              aria-pressed={mode === 'details'}
+              onClick={() => switchMode('details')}
+            >
+              Details
+            </button>
+            <button
+              type="button"
+              className={mode === 'url' ? 'btn btn-sm btn-primary' : 'btn btn-sm'}
+              aria-pressed={mode === 'url'}
+              onClick={() => switchMode('url')}
+            >
+              URL
+            </button>
+          </div>
+          {mode === 'url' && (
+            <>
+              <label>
+                Connection URL
+                <input
+                  value={url}
+                  onChange={(e) => touch(() => setUrl(e.target.value))}
+                  placeholder="redis://user:password@host:6379/0"
+                  spellCheck={false}
+                  className={errors.url ? 'invalid' : ''}
+                  aria-invalid={Boolean(errors.url)}
+                  aria-describedby={errors.url ? 'err-url' : 'url-hint'}
+                />
+              </label>
+              {errors.url ? (
+                <p className="field-error" id="err-url" role="alert">
+                  {errors.url}
+                </p>
+              ) : (
+                <p className="field-hint" id="url-hint">
+                  Use rediss:// for TLS. A password in the URL overrides the field below.
+                </p>
+              )}
+            </>
+          )}
+          {mode === 'details' && (
+            <>
           <label>
             Host
             <input
@@ -219,6 +355,8 @@ function ConnectionForm({ initial, onSubmit, onCancel }: Props): React.JSX.Eleme
             Username (optional)
             <input value={username} onChange={(e) => touch(() => setUsername(e.target.value))} />
           </label>
+            </>
+          )}
           <label>
             Password (optional)
             <input
@@ -258,6 +396,8 @@ function ConnectionForm({ initial, onSubmit, onCancel }: Props): React.JSX.Eleme
               Heads up: {storage.reason}. Saved passwords are only weakly protected on this machine.
             </p>
           )}
+          {mode === 'details' && (
+            <>
           <label>
             DB index
             <input
@@ -282,6 +422,8 @@ function ConnectionForm({ initial, onSubmit, onCancel }: Props): React.JSX.Eleme
             />
             Use TLS
           </label>
+            </>
+          )}
 
           {test.state !== 'idle' && (
             <p
