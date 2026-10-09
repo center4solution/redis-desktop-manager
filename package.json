@@ -1,0 +1,46 @@
+{
+  "name": "rdm-desktop",
+  "version": "0.1.0",
+  "description": "Cross-platform Redis Desktop Manager",
+  "main": "./out/main/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "electron-vite dev",
+    "build": "electron-vite build",
+    "start": "electron-vite preview",
+    "typecheck:node": "tsc -p tsconfig.node.json --noEmit",
+    "typecheck:web": "tsc -p tsconfig.web.json --noEmit",
+    "typecheck": "npm run typecheck:node && npm run typecheck:web",
+    "package": "electron-vite build && electron-builder"
+  },
+  "keywords": [],
+  "homepage": "https://github.com/rdm-desktop/rdm-desktop",
+  "license": "MIT",
+  "type": "module",
+  "devDependencies": {
+    "@electron-toolkit/tsconfig": "^2.0.0",
+    "@types/node": "^26.4.0",
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.5",
+    "@types/react-window": "^1.8.8",
+    "@vitejs/plugin-react": "^4.7.0",
+    "electron": "^44.1.0",
+    "electron-builder": "^26.15.3",
+    "electron-vite": "^5.0.0",
+    "eslint": "^10.9.1",
+    "playwright-core": "^1.62.1",
+    "prettier": "^3.9.6",
+    "typescript": "^5.9.3",
+    "vite": "^6.4.3"
+  },
+  "dependencies": {
+    "@electron-toolkit/utils": "^4.0.0",
+    "electron-updater": "^6.8.9",
+    "ioredis": "^6.0.0",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
+    "react-window": "^1.8.11",
+    "zustand": "^5.0.15"
+  },
+  "desktopName": "rdm-desktop.desktop"
+}

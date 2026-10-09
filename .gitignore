@@ -1,0 +1,12 @@
+node_modules
+out
+dist
+dist-electron
+*.log
+.DS_Store
+.env
+release
+*.tsbuildinfo
+
+# Local-only files (notes, dev scripts, old release builds)
+local/
