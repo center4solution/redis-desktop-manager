@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.2.0
+
+- **Renamed to Redis Desktop Manager** — new product name, package name (`redis-desktop-manager`) and app ID (`com.center4solution.redis-desktop-manager`). Linux users with the old `rdm-desktop` package should remove it first (`sudo apt remove rdm-desktop`).
+- **Windows installer** — 64-bit NSIS installer (`redis-desktop-manager-setup-<version>.exe`) with a choice of install folder plus Desktop and Start Menu shortcuts. See [doc/install-windows.md](doc/install-windows.md).
+- **Connection URL option** — the connection form can take a `redis://` or `rediss://` URL (user, password, host, port, db, TLS) instead of separate fields.
+- New `package:win` and `package:linux` scripts.
+
 ## 0.1.0 — initial build-out
 
 All 12 planned steps for the first working version, in order:

@@ -1,4 +1,4 @@
-appId: com.rdm.desktop
+appId: com.center4solution.redis-desktop-manager
 productName: Redis Desktop Manager
 directories:
   buildResources: build
