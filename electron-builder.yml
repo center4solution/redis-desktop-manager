@@ -20,7 +20,7 @@ linux:
 win:
   target:
     - nsis
-  icon: build/icon.png
+  icon: build/icon.ico
 
 mac:
   target:
@@ -31,6 +31,10 @@ mac:
 nsis:
   oneClick: false
   allowToChangeInstallationDirectory: true
+  createDesktopShortcut: true
+  createStartMenuShortcut: true
+  shortcutName: Redis Desktop Manager
+  artifactName: redis-desktop-manager-setup-${version}.${ext}
 
 deb:
   depends:
