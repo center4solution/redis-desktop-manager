@@ -1516,6 +1516,19 @@ body.resizing-sidebar {
   flex-shrink: 0;
 }
 
+.mode-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 15px;
+  color: var(--text-secondary);
+}
+
+.mode-toggle > span {
+  width: 130px;
+  flex-shrink: 0;
+}
+
 .icon-row {
   display: grid;
   grid-template-columns: 130px 1fr;
