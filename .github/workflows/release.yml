@@ -1,0 +1,57 @@
+# Builds the app on Windows, Linux and macOS and attaches every installer
+# to one GitHub Release. Runs when a version tag (e.g. v0.3.0) is pushed,
+# or manually from the Actions tab for an existing tag.
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Existing tag to build and attach files to (e.g. v0.2.0)'
+        required: true
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: windows-latest
+            files: release/*.exe
+          - os: ubuntu-latest
+            files: |
+              release/*.AppImage
+              release/*.deb
+          - os: macos-latest
+            files: release/*.dmg
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.tag || github.ref }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - run: npm ci
+
+      - name: Build installers
+        run: npm run package -- --publish never
+        env:
+          # No code-signing certificates yet: build unsigned
+          CSC_IDENTITY_AUTO_DISCOVERY: false
+
+      - name: Attach to release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ inputs.tag || github.ref_name }}
+          files: ${{ matrix.files }}
+          fail_on_unmatched_files: true
