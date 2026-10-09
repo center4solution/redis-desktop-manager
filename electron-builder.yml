@@ -1,5 +1,5 @@
 appId: com.rdm.desktop
-productName: RDM Desktop
+productName: Redis Desktop Manager
 directories:
   buildResources: build
   output: release
@@ -52,6 +52,6 @@ deb:
 #
 # publish:
 #   provider: github
-#   owner: your-org
-#   repo: rdm-desktop
+#   owner: center4solution
+#   repo: redis-desktop-manager
 publish: null
