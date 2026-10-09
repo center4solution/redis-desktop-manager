@@ -1,5 +1,5 @@
 {
-  "name": "rdm-desktop",
+  "name": "redis-desktop-manager",
   "version": "0.1.0",
   "description": "Cross-platform Redis Desktop Manager",
   "main": "./out/main/index.js",
@@ -14,7 +14,7 @@
     "package": "electron-vite build && electron-builder"
   },
   "keywords": [],
-  "homepage": "https://github.com/rdm-desktop/rdm-desktop",
+  "homepage": "https://github.com/center4solution/redis-desktop-manager",
   "license": "MIT",
   "type": "module",
   "devDependencies": {
@@ -42,5 +42,5 @@
     "react-window": "^1.8.11",
     "zustand": "^5.0.15"
   },
-  "desktopName": "rdm-desktop.desktop"
+  "desktopName": "redis-desktop-manager.desktop"
 }

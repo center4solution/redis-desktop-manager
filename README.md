@@ -1,4 +1,4 @@
-# RDM Desktop
+# Redis Desktop Manager
 
 Cross-platform Redis Desktop Manager (Linux, Windows, macOS) — built with Electron + React + TypeScript (electron-vite).
 

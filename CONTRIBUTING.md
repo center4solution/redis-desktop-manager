@@ -1,4 +1,4 @@
-# Contributing to RDM Desktop
+# Contributing to Redis Desktop Manager
 
 Contributions of any size are welcome: bug reports, ideas, docs and code.
 

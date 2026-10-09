@@ -195,7 +195,7 @@ function App(): React.JSX.Element {
         </Sidebar>
 
         <main className="main-panel">
-          <h1 className="sr-only">RDM Desktop</h1>
+          <h1 className="sr-only">Redis Desktop Manager</h1>
           {activeProfile ? (
             activeState?.status === 'connected' && activeState.backendId ? (
               <>
@@ -240,7 +240,7 @@ function App(): React.JSX.Element {
           ) : (
             <div className="empty-state landing">
               <img className="landing-logo" src={logo} alt="" />
-              <h2 className="landing-title">RDM Desktop</h2>
+              <h2 className="landing-title">Redis Desktop Manager</h2>
               <p>
                 {loaded
                   ? 'Select a connection on the left, or add a new one.'
