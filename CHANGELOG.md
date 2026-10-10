@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+- **macOS installer** — DMGs for Apple Silicon (`redis-desktop-manager-<version>-arm64.dmg`) and Intel (`-x64.dmg`), ad-hoc signed. See [doc/install-mac.md](doc/install-mac.md).
+- New `package:mac` script.
+
 ## 0.2.0
 
 - **Windows installer** — 64-bit NSIS installer (`redis-desktop-manager-setup-<version>.exe`) with a choice of install folder plus Desktop and Start Menu shortcuts. See [doc/install-windows.md](doc/install-windows.md).
