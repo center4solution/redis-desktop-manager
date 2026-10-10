@@ -24,9 +24,18 @@ win:
 
 mac:
   target:
-    - dmg
+    - target: dmg
+      arch:
+        - arm64
+        - x64
   icon: build/icon.png
   category: public.app-category.developer-tools
+  # Not notarized: ad-hoc sign so the app runs on Apple Silicon.
+  identity: '-'
+  hardenedRuntime: false
+
+dmg:
+  artifactName: redis-desktop-manager-${version}-${arch}.${ext}
 
 nsis:
   oneClick: false

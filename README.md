@@ -11,6 +11,7 @@ Get the latest build from [Releases](https://github.com/center4solution/redis-de
 | Platform | File |
 |---|---|
 | Windows (64-bit) | `redis-desktop-manager-setup-<version>.exe` — see [install guide](doc/install-windows.md) |
+| macOS (Apple Silicon / Intel) | `redis-desktop-manager-<version>-arm64.dmg` / `-x64.dmg` — see [install guide](doc/install-mac.md) |
 | Linux (any distro) | `Redis Desktop Manager-<version>.AppImage` — see [install guide](doc/install-linux.md) |
 | Debian / Ubuntu | `redis-desktop-manager_<version>_amd64.deb` — see [install guide](doc/install-linux.md) |
 
@@ -50,12 +51,13 @@ npm run build         # production build (out/)
 ```bash
 npm run package         # current platform
 npm run package:win     # Windows x64 NSIS installer
+npm run package:mac     # macOS arm64 + x64 DMGs
 npm run package:linux   # Linux x64 AppImage + deb
 ```
 
 `npm run package` builds for whatever platform you run it on: AppImage + deb on Linux, NSIS on Windows, dmg on macOS (targets are configured in `electron-builder.yml`). Run it natively on each platform — there's no cross-compiling from Linux to Windows/macOS here.
 
-Packaged apps land in `release/`. Linux (AppImage + deb) and Windows (NSIS) packages are built; macOS builds must be run on a Mac and haven't been verified yet.
+Packaged apps land in `release/`. Linux (AppImage + deb), Windows (NSIS) and macOS (dmg) packages are built. macOS builds must be run on a Mac; they're ad-hoc signed but not notarized (see [doc/install-mac.md](doc/install-mac.md)).
 
 ### Auto-update
 
