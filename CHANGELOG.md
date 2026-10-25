@@ -1,9 +1,11 @@
 # Changelog
 
-## Unreleased
+## 0.2.1
 
 - **macOS installer** — DMGs for Apple Silicon (`redis-desktop-manager-<version>-arm64.dmg`) and Intel (`-x64.dmg`), ad-hoc signed. See [doc/install-mac.md](doc/install-mac.md).
 - New `package:mac` script.
+- **Builds for every platform** — each release now ships Windows (`.exe`), Linux (`.AppImage`, `.deb`) and macOS (`.dmg`), built by GitHub Actions.
+- Linux files have stable names without spaces: `redis-desktop-manager-<version>-x64.AppImage` and `-x64.deb`.
 
 ## 0.2.0
 

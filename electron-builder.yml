@@ -16,6 +16,8 @@ linux:
     - deb
   category: Development
   icon: build/icons
+  # No spaces, so download URLs stay stable (GitHub turns spaces into dots)
+  artifactName: redis-desktop-manager-${version}-${arch}.${ext}
 
 win:
   target:
@@ -23,6 +25,7 @@ win:
   icon: build/icon.ico
 
 mac:
+  # Separate builds for Apple Silicon and Intel Macs
   target:
     - target: dmg
       arch:

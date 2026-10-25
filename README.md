@@ -12,14 +12,14 @@ Get the latest build from [Releases](https://github.com/center4solution/redis-de
 |---|---|
 | Windows (64-bit) | `redis-desktop-manager-setup-<version>.exe` — see [install guide](doc/install-windows.md) |
 | macOS (Apple Silicon / Intel) | `redis-desktop-manager-<version>-arm64.dmg` / `-x64.dmg` — see [install guide](doc/install-mac.md) |
-| Linux (any distro) | `Redis Desktop Manager-<version>.AppImage` — see [install guide](doc/install-linux.md) |
-| Debian / Ubuntu | `redis-desktop-manager_<version>_amd64.deb` — see [install guide](doc/install-linux.md) |
+| Linux (any distro) | `redis-desktop-manager-<version>-x64.AppImage` — see [install guide](doc/install-linux.md) |
+| Debian / Ubuntu | `redis-desktop-manager-<version>-x64.deb` — see [install guide](doc/install-linux.md) |
 
 > Upgrading from 0.1.0 on Debian/Ubuntu? The package was renamed — run `sudo apt remove rdm-desktop` first.
 
 ## Status
 
-**v0.2.0** — adds a Windows installer and connecting by `redis://` URL. See [CHANGELOG.md](CHANGELOG.md) for what's in and what's deliberately out of scope.
+**v0.2.1** — ready-made builds for Windows, Linux and macOS. See [CHANGELOG.md](CHANGELOG.md) for what's in and what's deliberately out of scope.
 
 ## Features
 
